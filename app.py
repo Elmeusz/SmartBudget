@@ -4,14 +4,16 @@ from models import db, Transaction, User
 from logic import validate_transaction
 from datetime import datetime
 
-def create_app():
+def create_app(config_overrides=None):
     app = Flask(__name__)
     
     # Configuration
-    # Ensure the instance folder exists for the database
     app.config['SECRET_KEY'] = 'dev_key_for_smart_budget'
     app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(app.instance_path, 'smartbudget.db')}"
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    if config_overrides:
+        app.config.update(config_overrides)
 
     # Initialize database
     db.init_app(app)
