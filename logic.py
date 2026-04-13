@@ -1,4 +1,6 @@
 from datetime import datetime
+from sqlalchemy import func
+from models import db, Transaction
 
 def validate_transaction(data):
     """
@@ -36,3 +38,15 @@ def validate_transaction(data):
         return False, "Data musi być w formacie RRRR-MM-DD."
 
     return True, None
+
+def calculate_balance():
+    """
+    Oblicza aktualny stan konta na podstawie wszystkich transakcji.
+    Suma przychodów - Suma wydatków.
+    """
+    # Suma przychodów
+    income = db.session.query(func.sum(Transaction.amount)).filter(Transaction.type == 'przychód').scalar() or 0
+    # Suma wydatków
+    expense = db.session.query(func.sum(Transaction.amount)).filter(Transaction.type == 'wydatek').scalar() or 0
+    
+    return float(income - expense)
