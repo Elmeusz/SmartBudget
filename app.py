@@ -1,6 +1,8 @@
 import os
-from flask import Flask
-from models import db
+from flask import Flask, request, jsonify
+from models import db, Transaction, User
+from logic import validate_transaction
+from datetime import datetime
 
 def create_app():
     app = Flask(__name__)
@@ -19,10 +21,47 @@ def create_app():
         if not os.path.exists(app.instance_path):
             os.makedirs(app.instance_path)
         db.create_all()
+        
+        # Tworzenie testowego użytkownika jeśli baza jest pusta
+        if User.query.count() == 0:
+            test_user = User(username='testuser', email='test@example.com', password_hash='hash')
+            db.session.add(test_user)
+            db.session.commit()
+            print("Utworzono domyślnego użytkownika testowego (id=1)")
 
     @app.route('/')
     def index():
         return 'Aplikacja działa'
+
+    @app.route('/add_transaction', methods=['POST'])
+    def add_transaction():
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'Brak danych JSON'}), 400
+
+        # Walidacja danych
+        is_valid, message = validate_transaction(data)
+        if not is_valid:
+            return jsonify({'error': message}), 400
+
+        # Dodatkowe pola wymagane przez model (tymczasowe przypisanie usera jeśli nie podano)
+        user_id = data.get('user_id', 1)
+        trans_type = data.get('type', 'wydatek') # Domyślnie wydatek
+
+        try:
+            new_transaction = Transaction(
+                amount=data['amount'],
+                description=data['description'],
+                date=datetime.strptime(data['date'], '%Y-%m-%d').date(),
+                type=trans_type,
+                user_id=user_id
+            )
+            db.session.add(new_transaction)
+            db.session.commit()
+            return jsonify({'message': 'Transakcja dodana pomyślnie', 'id': new_transaction.id}), 201
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'error': f'Błąd zapisu: {str(e)}'}), 500
 
     return app
 
