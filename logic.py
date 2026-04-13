@@ -50,3 +50,9 @@ def calculate_balance():
     expense = db.session.query(func.sum(Transaction.amount)).filter(Transaction.type == 'wydatek').scalar() or 0
     
     return float(income - expense)
+
+def get_all_transactions():
+    """
+    Pobiera listę wszystkich transakcji posortowanych od najnowszej do najstarszej.
+    """
+    return Transaction.query.order_by(Transaction.date.desc(), Transaction.id.desc()).all()
