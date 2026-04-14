@@ -43,7 +43,7 @@
                 <div class="card-body">
                     <h5 class="card-title text-uppercase mb-3 fw-semibold opacity-75" style="letter-spacing: 2px;">Aktualne Saldo</h5>
                     <div id="balanceAmount" class="balance-amount mb-4">0.00 <span class="fs-2 fw-normal opacity-75">PLN</span></div>
-                    <button class="btn btn-light btn-lg rounded-pill fw-bold px-4 shadow-sm" type="button">
+                    <button class="btn btn-light btn-lg rounded-pill fw-bold px-4 shadow-sm" type="button" data-bs-toggle="modal" data-bs-target="#addTransactionModal">
                         <i class="bi bi-plus-circle me-2 text-primary"></i>Dodaj transakcję
                     </button>
                 </div>
@@ -74,6 +74,44 @@
             </div>
         </div>
     </div>
+</div>
+
+<!-- Modal Dodawania Transakcji -->
+<div class="modal fade" id="addTransactionModal" tabindex="-1" aria-labelledby="addTransactionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg rounded-4">
+      <div class="modal-header border-bottom-0 pb-0">
+        <h1 class="modal-title fs-5 fw-bold" id="addTransactionModalLabel">Nowa transakcja</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zamknij"></button>
+      </div>
+      <div class="modal-body">
+        <form id="addTransactionForm">
+          <div class="mb-3">
+            <label for="transactionAmount" class="form-label fw-semibold text-muted small mb-1">Kwota (PLN)</label>
+            <input type="number" class="form-control form-control-lg bg-light border-0" id="transactionAmount" step="0.01" placeholder="0.00" required>
+          </div>
+          <div class="mb-3">
+            <label for="transactionType" class="form-label fw-semibold text-muted small mb-1">Kategoria</label>
+            <select class="form-select form-select-lg bg-light border-0" id="transactionType" required>
+              <option value="wydatek" selected>Wydatek</option>
+              <option value="przychód">Przychód</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="transactionDescription" class="form-label fw-semibold text-muted small mb-1">Opis</label>
+            <input type="text" class="form-control bg-light border-0" id="transactionDescription" placeholder="np. Zakupy spożywcze" required>
+          </div>
+          <div class="mb-4">
+            <label for="transactionDate" class="form-label fw-semibold text-muted small mb-1">Data</label>
+            <input type="date" class="form-control bg-light border-0" id="transactionDate" required>
+          </div>
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold">Zapisz transakcję</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Bootstrap JS -->
