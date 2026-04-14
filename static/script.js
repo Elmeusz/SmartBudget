@@ -1,6 +1,54 @@
 document.addEventListener('DOMContentLoaded', () => {
     fetchTransactions();
+    
+    const form = document.getElementById('addTransactionForm');
+    if (form) {
+        form.addEventListener('submit', handleAddTransaction);
+    }
 });
+
+async function handleAddTransaction(e) {
+    e.preventDefault();
+    
+    const data = {
+        amount: parseFloat(document.getElementById('transactionAmount').value),
+        type: document.getElementById('transactionType').value,
+        description: document.getElementById('transactionDescription').value,
+        date: document.getElementById('transactionDate').value
+    };
+
+    try {
+        const response = await fetch('/add_transaction', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            alert('Błąd dodawania transakcji: ' + (result.error || 'Nieznany błąd'));
+            return;
+        }
+
+        // Sukces - resetuj formularz
+        document.getElementById('addTransactionForm').reset();
+
+        // Zamknij okno modalne
+        const modalEl = document.getElementById('addTransactionModal');
+        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+        modal.hide();
+
+        // Odśwież dane
+        fetchTransactions();
+
+    } catch (error) {
+        console.error('Błąd podczas zapisywania transakcji:', error);
+        alert('Wystąpił błąd podczas komunikacji z serwerem.');
+    }
+}
 
 async function fetchTransactions() {
     try {
