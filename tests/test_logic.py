@@ -84,5 +84,27 @@ class TestLogic(unittest.TestCase):
         self.assertFalse(is_valid)
         self.assertEqual(message, "Opis nie może być pusty.")
 
+    def test_delete_transaction(self):
+        """Testuje dodawanie i usuwanie transakcji oraz weryfikuje czy baza jest pusta po usunięciu."""
+        transaction = Transaction(
+            amount=200.0,
+            type='wydatek',
+            date=datetime.now().date(),
+            description='Test usunięcia',
+            user_id=1
+        )
+        db.session.add(transaction)
+        db.session.commit()
+
+        # Upewniamy się, że transakcja została dodana
+        self.assertEqual(Transaction.query.count(), 1)
+
+        # Usuwamy transakcję
+        db.session.delete(transaction)
+        db.session.commit()
+
+        # Sprawdzamy czy baza jest teraz pusta
+        self.assertEqual(Transaction.query.count(), 0)
+
 if __name__ == '__main__':
     unittest.main()
