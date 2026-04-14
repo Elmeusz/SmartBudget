@@ -1,7 +1,7 @@
 import unittest
 from app import create_app
 from models import db, Transaction, User
-from logic import calculate_balance
+from logic import calculate_balance, validate_transaction
 from datetime import datetime
 
 class TestLogic(unittest.TestCase):
@@ -61,6 +61,17 @@ class TestLogic(unittest.TestCase):
         # Oczekiwany wynik: 1500 - 300 = 1200
         balance = calculate_balance()
         self.assertEqual(balance, 1200.0)
+
+    def test_validate_negative_amount(self):
+        """Testuje, czy próba dodania transakcji z ujemną kwotą zwraca błąd."""
+        data = {
+            'amount': -50.0,
+            'description': 'Test',
+            'date': '2023-10-10'
+        }
+        is_valid, message = validate_transaction(data)
+        self.assertFalse(is_valid)
+        self.assertEqual(message, "Kwota musi być większa od 0.")
 
 if __name__ == '__main__':
     unittest.main()
