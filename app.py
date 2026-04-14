@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from models import db, Transaction, User
 from logic import validate_transaction
 from datetime import datetime
@@ -33,7 +33,24 @@ def create_app(config_overrides=None):
 
     @app.route('/')
     def index():
-        return 'Aplikacja działa'
+        return render_template('index.html')
+
+    @app.route('/api/transactions', methods=['GET'])
+    def get_transactions():
+        from logic import get_all_transactions, calculate_balance
+        transactions = get_all_transactions()
+        balance = calculate_balance()
+        data = [{
+            'id': t.id,
+            'amount': t.amount,
+            'description': t.description,
+            'date': t.date.isoformat(),
+            'type': t.type
+        } for t in transactions]
+        return jsonify({
+            'balance': balance,
+            'transactions': data
+        })
 
     @app.route('/add_transaction', methods=['POST'])
     def add_transaction():

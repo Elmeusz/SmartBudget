@@ -42,7 +42,7 @@
             <div class="card balance-card text-center p-5 mb-4">
                 <div class="card-body">
                     <h5 class="card-title text-uppercase mb-3 fw-semibold opacity-75" style="letter-spacing: 2px;">Aktualne Saldo</h5>
-                    <div class="balance-amount mb-4">0.00 <span class="fs-2 fw-normal opacity-75">PLN</span></div>
+                    <div id="balanceAmount" class="balance-amount mb-4">0.00 <span class="fs-2 fw-normal opacity-75">PLN</span></div>
                     <button class="btn btn-light btn-lg rounded-pill fw-bold px-4 shadow-sm" type="button">
                         <i class="bi bi-plus-circle me-2 text-primary"></i>Dodaj transakcję
                     </button>
@@ -65,26 +65,8 @@
                                     <th scope="col" class="fw-semibold text-end">Kwota</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <!-- Przykładowy wiersz wydatku -->
-                                <tr>
-                                    <td>2023-10-15</td>
-                                    <td class="fw-medium">Zakupy spożywcze</td>
-                                    <td><span class="badge bg-secondary opacity-75">wydatek</span></td>
-                                    <td class="text-end text-danger fw-bold">-150.00 PLN</td>
-                                </tr>
-                                <!-- Przykładowy wiersz przychodu -->
-                                <tr>
-                                    <td>2023-10-10</td>
-                                    <td class="fw-medium">Wypłata</td>
-                                    <td><span class="badge bg-info bg-opacity-75 text-dark">przychód</span></td>
-                                    <td class="text-end text-success fw-bold">+4500.00 PLN</td>
-                                </tr>
-                                <!-- Wyświetlanie gdy brak transakcji (opcjonalnie do obsłużenia przez backend) 
-                                <tr class="d-none">
-                                    <td colspan="4" class="text-center text-muted py-4">Brak ostatnich transakcji w historii.</td>
-                                </tr>
-                                -->
+                            <tbody id="transactionsTableBody">
+                                <!-- Zawartość tabeli zostanie wypełniona przez JS -->
                             </tbody>
                         </table>
                     </div>
@@ -96,5 +78,7 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Custom JS -->
+<script src="/static/script.js"></script>
 </body>
 </html>
