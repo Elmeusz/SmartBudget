@@ -73,5 +73,16 @@ class TestLogic(unittest.TestCase):
         self.assertFalse(is_valid)
         self.assertEqual(message, "Kwota musi być większa od 0.")
 
+    def test_validate_empty_description(self):
+        """Testuje, czy próba dodania transakcji bez opisu zwraca błąd."""
+        data = {
+            'amount': 50.0,
+            'description': '', # empty description
+            'date': '2023-10-10'
+        }
+        is_valid, message = validate_transaction(data)
+        self.assertFalse(is_valid)
+        self.assertEqual(message, "Opis nie może być pusty.")
+
 if __name__ == '__main__':
     unittest.main()
